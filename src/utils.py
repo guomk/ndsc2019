@@ -7,82 +7,89 @@ import os
 
 
 def grid_black_bg_text(grid, text):
-	_ = grid.text(
-		0.5, 0.05, text, verticalalignment='bottom', horizontalalignment='center',
-		transform=grid.transAxes, color='white', fontsize=12,
-		bbox={'facecolor': 'black', 'pad': 5})
+    _ = grid.text(
+        0.5, 0.05, text, verticalalignment='bottom', horizontalalignment='center',
+        transform=grid.transAxes, color='white', fontsize=12,
+        bbox={'facecolor': 'black', 'pad': 5})
 
 
 def plot_image_grid(image_samples, ncols=4, train=True, data_root=''):
-	nrows = np.ceil(len(image_samples) * 1.0 / ncols).astype('int')
-	fig_width = 16
-	fig_height = int(fig_width * 1.0 / ncols * nrows)
+    nrows = np.ceil(len(image_samples) * 1.0 / ncols).astype('int')
+    fig_width = 16
+    fig_height = int(fig_width * 1.0 / ncols * nrows)
 
-	fig = plt.figure(1, (fig_width, fig_height))
-	grids = ImageGrid(fig, 111, nrows_ncols=(nrows, ncols), axes_pad=0)
+    fig = plt.figure(1, (fig_width, fig_height))
+    grids = ImageGrid(fig, 111, nrows_ncols=(nrows, ncols), axes_pad=0)
+    
+#     print(image_samples[['itemid', 'Category', 'image_path']].head(10))
+    
+    im_temp = os.path.join(data_root, 'datasets/')
 
-	if train:
-		im_temp = os.path.join(data_root, 'data/train/%s.jpg')
-	else:
-		im_temp = os.path.join(data_root, 'data/test/%s.jpg')
-	im_size = (300, 300)
+#     if train:
+#         im_temp = os.path.join(data_root, 'datasets/train/%s.jpg')
 
-	for item_idx, item in enumerate(image_samples.to_dict('record')):
-		img = Image.open(im_temp % item['id']).resize(im_size)
+#     else:
+#         im_temp = os.path.join(data_root, 'datasets/test/%s.jpg')
+    im_size = (300, 300)
 
-		ax = grids[item_idx]
-		ax.imshow(img)
+    for item_idx, item in enumerate(image_samples.to_dict('record')):
+        image_path = item['image_path']
+        if image_path[-4:] != '.jpg':
+            image_path += '.jpg'
+#         print(image_path)
+        img = Image.open(im_temp + image_path).resize(im_size)
 
-		grid_text = item['breed'] if train else 'unknown'
-		grid_black_bg_text(ax, grid_text)
-		ax.axis('off')
+        ax = grids[item_idx]
+        ax.imshow(img)
 
-	return grids
+        grid_text = item['itemid'] if train else 'unknown'
+        grid_black_bg_text(ax, grid_text)
+        ax.axis('off')
+
+    return grids
 
 
 def show_data_samples(sample_indices, dataset):
-	fig = plt.figure(figsize=(16, 16))
-	grids = ImageGrid(fig, 111, nrows_ncols=(4, 4), axes_pad=0)
-	im_size = (300, 300)
+    fig = plt.figure(figsize=(16, 16))
+    grids = ImageGrid(fig, 111, nrows_ncols=(4, 4), axes_pad=0)
+    im_size = (300, 300)
 
-	for i, idx in enumerate(sample_indices):
-		data_sample = dataset[idx]
-		ax = grids[i]
+    for i, idx in enumerate(sample_indices):
+        data_sample = dataset[idx]
+        ax = grids[i]
 
-		# ax.set_title('Sample #{}'.format(idx))
-		ax.imshow(data_sample['image'].resize(im_size))
-		grid_black_bg_text(ax, data_sample['label_name'])
-		ax.axis('off')
+        # ax.set_title('Sample #{}'.format(idx))
+        ax.imshow(data_sample['image'].resize(im_size))
+        grid_black_bg_text(ax, data_sample['label_name'])
+        ax.axis('off')
 
 
 def recover_image(im, writer=False):
-	mean = np.array([0.485, 0.456, 0.406])
-	std = np.array([0.229, 0.224, 0.225])
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
 
-	im = im.numpy().transpose((1, 2, 0))
-	im = std * im + mean
-	im = np.clip(im, 0, 1)
+    im = im.numpy().transpose((1, 2, 0))
+    im = std * im + mean
+    im = np.clip(im, 0, 1)
 
-	if writer:
-		im = im.transpose((2, 0, 1))
+    if writer:
+        im = im.transpose((2, 0, 1))
 
-	return im
+    return im
 
 
 def show_data_batch(data_batch, figsize=(16, 16), train=True):
 
-	fig = plt.figure(figsize=figsize)
-	grids = ImageGrid(fig, 111, nrows_ncols=(4, 4), axes_pad=0)
+    fig = plt.figure(figsize=figsize)
+    grids = ImageGrid(fig, 111, nrows_ncols=(4, 4), axes_pad=0)
 
-	for i in np.arange(16):
+    for i in np.arange(16):
 
-		im = data_batch['image'][i]
-		im = recover_image(im)
+        im = data_batch['image'][i]
+        im = recover_image(im)
 
-		ax = grids[i]
-		ax.imshow(im)
-		grid_text = data_batch['label_name'][i] if train else 'unknown'
-		grid_black_bg_text(ax, grid_text)
-		ax.axis('off')
-
-
+        ax = grids[i]
+        ax.imshow(im)
+        grid_text = data_batch['label_name'][i] if train else 'unknown'
+        grid_black_bg_text(ax, grid_text)
+        ax.axis('off')
