@@ -60,7 +60,7 @@ def show_data_samples(sample_indices, dataset):
 
         # ax.set_title('Sample #{}'.format(idx))
         ax.imshow(data_sample['image'].resize(im_size))
-        grid_black_bg_text(ax, data_sample['label_name'])
+        grid_black_bg_text(ax, data_sample['label'])
         ax.axis('off')
 
 
@@ -90,6 +90,6 @@ def show_data_batch(data_batch, figsize=(16, 16), train=True):
 
         ax = grids[i]
         ax.imshow(im)
-        grid_text = data_batch['label_name'][i] if train else 'unknown'
+        grid_text = str(data_batch['label'][i]) if train else 'unknown'
         grid_black_bg_text(ax, grid_text)
         ax.axis('off')
