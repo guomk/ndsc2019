@@ -22,14 +22,14 @@ input_size = get_model_input_size(model_name)
 num_classes = 58
 
 # Batch size for training (change depending on how much memory you have)
-batch_size = 256
+batch_size = 128
 
 # Number of epochs to train for 
 num_epochs = 10
 
 # Flag for feature extracting. When False, we finetune the whole model, 
 #   when True we only update the reshaped layer params
-feature_extract = True
+feature_extract = False
 
 crop_size = input_size
 # we use (scale_size: 256, crop_size: 224) and (scale_size: 320, crop_size: 299)
@@ -106,7 +106,7 @@ logloss_criterion = torch.nn.CrossEntropyLoss()
 # Observe that only parameters of final layer are being optimized as
 # opposed to before.
 # sgd_optimizer = torch.optim.SGD(params_to_update, lr=0.001, momentum=0.9)
-adam_optimizer = torch.optim.Adam(params_to_update, lr=0.0005, weight_decay=0.0001)
+adam_optimizer = torch.optim.Adam(params_to_update, lr=1e-4, weight_decay=0)
 
 # Decay LR by a factor of 0.1 every 7 epochs
 # exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(sgd_optimizer, step_size=5, gamma=0.1)
