@@ -25,7 +25,7 @@ num_classes = 58
 batch_size = 128
 
 # Number of epochs to train for 
-num_epochs = 10
+num_epochs = 20
 
 # Flag for feature extracting. When False, we finetune the whole model, 
 #   when True we only update the reshaped layer params
@@ -106,7 +106,7 @@ logloss_criterion = torch.nn.CrossEntropyLoss()
 # Observe that only parameters of final layer are being optimized as
 # opposed to before.
 # sgd_optimizer = torch.optim.SGD(params_to_update, lr=0.001, momentum=0.9)
-adam_optimizer = torch.optim.Adam(params_to_update, lr=1e-4, weight_decay=0)
+adam_optimizer = torch.optim.Adam(params_to_update, lr=3e-4, weight_decay=0)
 
 # Decay LR by a factor of 0.1 every 7 epochs
 # exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(sgd_optimizer, step_size=5, gamma=0.1)
@@ -130,7 +130,7 @@ trained_model, full_performance_history = train_model(
 # 0.0005
 # Training complete in 11m 14s
 # Best validation Loss: 0.514895 Acc: 0.8368
-torch.save(trained_model.state_dict(), 'model/resnet50_fe_adam_10epoch_simple_0.0005.pt')
+torch.save(trained_model.state_dict(), 'model/resnet50_fe_adam_20epoch_simple_0.0003.pt')
 display(full_performance_history.head())
 # save the history
-full_performance_history.to_csv('model/resnet50_fe_adam_10epoch_simple_0.0005_history.csv', index=False)
+full_performance_history.to_csv('model/resnet50_fe_adam_20epoch_simple_0.0003_history.csv', index=False)
