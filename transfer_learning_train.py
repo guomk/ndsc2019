@@ -15,7 +15,7 @@ train_root_dir = 'datasets'
 test_root_dir = 'datasets'
 
 # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet, inception]
-model_name = 'resnet50'
+model_name = 'resnet34'
 input_size = get_model_input_size(model_name)
 
 # Number of classes in the dataset
@@ -105,7 +105,7 @@ logloss_criterion = torch.nn.CrossEntropyLoss()
 
 # Observe that only parameters of final layer are being optimized as
 # opposed to before.
-lr = 1e-3
+lr = 3e-4
 # sgd_optimizer = torch.optim.SGD(params_to_update, lr=0.001, momentum=0.9)
 adam_optimizer = torch.optim.Adam(params_to_update, lr=lr, weight_decay=0)
 
@@ -131,7 +131,7 @@ trained_model, full_performance_history = train_model(
 # 0.0005
 # Training complete in 11m 14s
 # Best validation Loss: 0.514895 Acc: 0.8368
-torch.save(trained_model.state_dict(), 'model/resnet50_fe_adam_' + str(num_epochs) + 'epoch_simple_' + str(lr) + '.pt')
+torch.save(trained_model.state_dict(), 'model/' + model_name + '_fe_adam_' + str(num_epochs) + 'epoch_simple_' + str(lr) + '.pt')
 # display(full_performance_history.head())
 # save the history
-full_performance_history.to_csv('model/resnet50_fe_adam_' + str(num_epochs) + 'epoch_simple_' + str(lr) + '_history.csv', index=False)
+full_performance_history.to_csv('model/' + model_name + '_fe_adam_' + str(num_epochs) + 'epoch_simple_' + str(lr) + '_history.csv', index=False)
